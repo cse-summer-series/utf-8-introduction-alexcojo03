@@ -52,7 +52,15 @@ unsigned int utf8_strlen(char* unicode) {
  *   bytes_for("成龙", 3) -> -1
  */
 unsigned int bytes_for(char* unicode, unsigned int n) {
-  return 0;
+  if (n > utf8_strlen(unicode)) { return -1; }
+  unsigned int bytes_seen = 0;
+  unsigned int unicode_characters_seen = 0;
+  while (unicode_characters_seen < n) {
+    unsigned int bytes_this_char = num_bytes(unicode[bytes_seen]);
+    bytes_seen += bytes_this_char;
+    unicode_characters_seen += 1;
+  }
+  return bytes_seen;
 }
 
 int main(int argc, char** argv) {
@@ -65,6 +73,12 @@ int main(int argc, char** argv) {
   unsigned int ulen = utf8_strlen(name);
   printf("Hi %s, your name is %d characters long according to utf8_strlen.\n", name, ulen);
   printf("The number of bytes needed for the first character are: %c\n", name[0]);
+  printf("bytes_for(\"José\", 3) -> %d\n", bytes_for("José", 3));
+  printf("bytes_for(\"Ülo\", 3) -> %d\n", bytes_for("Ülo", 3));
+  printf("bytes_for(\"José\", 4) -> %d\n", bytes_for("José", 4));
+  printf("bytes_for(\"成龙\", 1) -> %d\n", bytes_for("成龙", 1));
+  printf("bytes_for(\"成龙\", 2) -> %d\n", bytes_for("成龙", 2));
+  printf("bytes_for(\"成龙\", 3) -> %d\n", bytes_for("成龙", 3));
 
   printf("The invididual characters are: \n");
   for(int i = 0; i < length; i += 1) {
